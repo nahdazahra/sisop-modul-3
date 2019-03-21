@@ -5,7 +5,26 @@
 2. Peserta memahami bagaimana thread bekerja
 3. Peserta memahami bagaimana cara membuat thread
 
-
+- [Thread dan IPC](#thread-dan-ipc)
+  - [Objectives](#objectives)
+  - [1. Thread](#1-thread)
+    - [1.1 Thread](#11-thread)
+    - [1.2 Join Thread](#12-join-thread)
+    - [1.3 Mutual Exclusion](#13-mutual-exclusion)
+  - [2. IPC (Interprocess Communication)](#2-ipc-interprocess-communication)
+    - [2.1 IPC](#21-ipc)
+    - [2.2 Pipes](#22-pipes)
+    - [2.3 Sockets](#23-sockets)
+    - [2.4 Message Queues](#24-message-queues)
+    - [2.5 Semaphores](#25-semaphores)
+    - [2.6 Shared Memory](#26-shared-memory)
+  - [Appendix](#appendix)
+    - [Libraries documentation (and functions) :sparkles: :sparkles: :camel:](#libraries-documentation-and-functions-sparkles-sparkles-camel)
+  - [Soal Latihan](#soal-latihan)
+      - [Latihan 1](#latihan-1)
+      - [Latihan 2](#latihan-2)
+      - [Latihan 3](#latihan-3)
+    - [References](#references)
 ## 1. Thread 
 ### 1.1 Thread
 Thread merupakan unit terkecil dalam suatu proses yang dapat dijadwalkan oleh sistem operasi. Thread biasanya terbentuk oleh `fork` yang berjalan pada suatu script atau program untuk sebuah proses. Minimal terdapat sebuah thread yang berjalan dalam suatu proses, walau biasanya terdapat lebih dari satu thread dalam proses tersebut. Thread akan berbagi memori dan menggunakan informasi (nilai) dari variabel-variabel pada suatu proses tersebut. Penggambaran thread pada sebuah proses dapat dilihat sebagai berikut.
@@ -444,14 +463,12 @@ $ man unistd.h
 
 #### Latihan 1
 Buatlah sebuah program multithreading yang dapat menyalin isi file baca.txt ke dalam file salin1.txt. Kemudian menyalin isi dari file salin1.txt ke dalam file salin2.txt!
-<!---#### Latihan 2
-Buatlah sebuah program multithreading yang dapat menampilkan N bilangan prima pertama. program akan dieksekusi menggunakan thread sebanyak T dimana setiap thread akan melakukan print sebanyak N/T bilangan prima.
-Input : N = banyak bilangan prima; T = banyak thread yang digunakan 
---->
-#### Revisi Latihan 2
+
+#### Latihan 2
 Buatlah sebuah program multithreading yang dapat menampilkan bilangan prima dari 1-N. program akan dieksekusi menggunakan thread sebanyak T dimana setiap thread akan melakukan pencarian bilangan prima dengan range N/T (range tiap thread berbeda), kemudian tiap thread akan menampilkan hasilnya.
 
 misalkan N = 100 dan T=2; jadi thread 1 akan mencari bilangan prima dari 1-50 dan thread 2 akan mencari dari 51-100
+
 #### Latihan 3
 Ohan adalah seorang network administrator, dia bekerja menggunakan linux server. Suatu ketika Ohan
 merasa jenuh dengan pekerjaannya dia ingin mendengarkan lagu, tetapi linux server tidak memiliki GUI
