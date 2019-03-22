@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 
-pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasusu ini ada 2 thread
+pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
 
 int length=5; //inisialisasi jumlah untuk looping
 void* playandcount(void *arg)
@@ -35,7 +35,7 @@ int main(void)
 {
 	int i=0;
 	int err;
-	while(i<2) //looping membuat thread 2x
+	while(i<2) // loop sejumlah thread
 	{
 		err=pthread_create(&(tid[i]),NULL,&playandcount,NULL); //membuat thread
 		if(err!=0) //cek error

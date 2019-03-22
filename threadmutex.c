@@ -4,8 +4,7 @@
 #include<stdlib.h>
 #include<unistd.h>
  
-pthread_t tid1;
-pthread_t tid2;
+pthread_t tid1, tid2;
 int status;
 int nomor;
  
