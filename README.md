@@ -291,6 +291,8 @@ Example :
 // pipe system call in C 
 #include <stdio.h> 
 #include <unistd.h> 
+#include <stdlib.h>
+
 #define MSGSIZE 16 
 char* msg1 = "hello, world #1"; 
 char* msg2 = "hello, world #2"; 
