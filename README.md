@@ -52,7 +52,7 @@ int pthread_create(pthread_t *restrict tidp,
 Penjelasan Syntax:
 - Pointer `tidp` digunakan untuk menunjukkan alamat memori dengan thread ID dari thread baru.
 - Argumen `attr` digunakan untuk menyesuaikan atribut yang digunakan oleh thread. nilai `attr` di-set `NULL` ketika thread menggunakan atribut *default*.
-- Thread yang baru dibuat akan berjalan dimulai dari fungsi `start_rtn` dalam library thread.
+- Thread yang baru dibuat akan berjalan dimulai dari fungsi `start_rtn` dalam fungsi thread.
 - Pointer `arg` digunakan untuk memberikan sebuah argumen ke fungsi `start_rtn`, jika tidak diperlukan argumen, maka `arg` akan di-set `NULL`.
 
 Contoh membuat program tanpa menggunakan thread [playtanpathread.c](playtanpathread.c):
@@ -148,9 +148,9 @@ Join thread adalah fungsi untuk melakukan penggabungan dengan thread lain yang t
 Contoh program C Join_Thread [thread_join.c](thread_join.c):
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h> //library thread
+#include<stdio.h>
+#include<stdlib.h>
+#include<pthread.h> //library thread
 
 void *print_message_function( void *ptr );
 
@@ -231,14 +231,13 @@ void* tulis(void *arg)
 {
     status = 0;
  
-    printf("Masukan nomor ");
+    printf("Masukan nomor : ");
     scanf("%d", &nomor);
  
     status = 1;
  
     return NULL;
 }
-
 
 void* baca(void *arg)
 {
@@ -253,7 +252,7 @@ void* baca(void *arg)
 int main(void)
 {
 
-    pthread_create(&(tid1), NULL, &tulis, NULL);
+    pthread_create(&(tid1), NULL, tulis, NULL);
     pthread_create(&(tid2), NULL, baca, NULL);
  
     pthread_join(tid1, NULL);
@@ -263,6 +262,7 @@ int main(void)
 }
 
 ```
+
 Keterangan :
 - Terdapat 2 buah thread yang berjalan dengan fungsi yang berbeda.
 - Sumber daya (variabel) yang digunakan kedua thread untuk mengeksekusi pekerjaannya **sama**.
@@ -332,7 +332,7 @@ int main()
 	for (i = 0; i < 3; i++) { 
 		/* read pipe */
 		read(p[0], inbuf, MSGSIZE); 
-		printf("% s\n", inbuf); 
+		printf("%s\n", inbuf); 
 	} 
 	return 0; 
 } 
@@ -633,9 +633,8 @@ Program 1 : 30
 ### Libraries documentation (and functions)
 ```
 $ man {anything-you-want-to-know}
-$ man mkfio
-$ man fcntl.h
-$ man unistd.h
+$ man mkfifo
+$ man fcntl
 ```
 
 ## Soal Latihan 
@@ -649,20 +648,12 @@ Buatlah sebuah program multithreading yang dapat menampilkan bilangan prima dari
 misalkan N = 100 dan T=2; jadi thread 1 akan mencari bilangan prima dari 1-50 dan thread 2 akan mencari dari 51-100
 
 #### Latihan 3
-Ohan adalah seorang network administrator, dia bekerja menggunakan linux server. Suatu ketika Ohan
-merasa jenuh dengan pekerjaannya dia ingin mendengarkan lagu, tetapi linux server tidak memiliki GUI
-sehingga Ohan harus memutar musik menggunakan konsol/terminal. Bantulah Ohan membuat pemutar
-musik berbasis konsol.
-Pemutar musik memiliki spesifikasi sebagai berikut :
-1. Perintah help untuk menampilkan daftar perintah yang dapat digunakan.
-2. Memiliki fitur list untuk menampilkan semua lagu pada folder playlist
-3. Memiliki fitur play untuk menjalankan lagu
-4. Memiliki fitur pause setelah t detik
-5. Memiliki fitur continue setelah t detik
-6. Memiliki fitur stop setelah t detik
+<!-- diganti soal pipe -->
 
 ### References 
 https://notes.shichao.io/apue/
+
 https://www.gta.ufrj.br/ensino/eel878/sockets/index.html
+
 http://advancedlinuxprogramming.com/alp-folder/alp-ch05-ipc.pdf
 
