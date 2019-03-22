@@ -31,7 +31,7 @@
 ### 1.1 Thread
 Thread merupakan unit terkecil dalam suatu proses yang dapat dijadwalkan oleh sistem operasi. Thread biasanya terbentuk oleh `fork` yang berjalan pada suatu script atau program untuk sebuah proses. Minimal terdapat sebuah thread yang berjalan dalam suatu proses, walau biasanya terdapat lebih dari satu thread dalam proses tersebut. Thread akan berbagi memori dan menggunakan informasi (nilai) dari variabel-variabel pada suatu proses tersebut. Penggambaran thread pada sebuah proses dapat dilihat sebagai berikut.
 
-![thread](thread2.png)
+![thread](img/thread2.png)
 
 Untuk melihat thread yang sedang berjalan, gunakan perintah :
 ```bash
@@ -451,7 +451,7 @@ int main()
 ### 2.3 Sockets
 *Socket* merupakan sebuah *end-point* dalam sebuah proses yang saling berkomunikasi. Biasanya *socket* digunakan untuk komunikasi antar proses pada komputer yang berbeda, namun dapat juga digunakan dalam komputer yang sama.
 
-Example : [socket-server.c](https://github.com/desyrahmi/sisop-modul-3/blob/master/socket-server.c) [socket-client.c](https://github.com/desyrahmi/sisop-modul-3/blob/master/socket-client.c)
+Example : [socket-server.c](socket-server.c) [socket-client.c](socket-client.c)
 
 Server
 ```c
@@ -563,7 +563,7 @@ Semaphore berbeda dengan jenis-jenis IPC yang lain. Pada pengaplikasiannya, sema
 ### 2.6 Shared Memory
 Sebuah mekanisme *mapping area(segments)* dari suatu blok *memory* untuk digunakan bersama oleh beberapa proses. Sebuah proses akan menciptakan *segment memory*, kemudian proses lain yang diijinkan dapat mengakses *memory* tersebut. *Shared memory* merupakan cara yang efektif untuk melakukan pertukaran data antar program.
 
-Example: [Proses 1](https://github.com/desyrahmi/sisop-modul-3/blob/master/proses1.c) [Proses 2](https://github.com/desyrahmi/sisop-modul-3/blob/master/proses2.c)
+Example: [Proses 1](proses1.c) [Proses 2](proses2.c)
 
 Proses 1
 ```c
