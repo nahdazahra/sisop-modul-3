@@ -19,7 +19,7 @@
     - [2.5 Semaphores](#25-semaphores)
     - [2.6 Shared Memory](#26-shared-memory)
   - [Appendix](#appendix)
-    - [Libraries documentation (and functions) :sparkles: :sparkles: :camel:](#libraries-documentation-and-functions-sparkles-sparkles-camel)
+    - [Libraries documentation (and functions)](#libraries-documentation-and-functions)
   - [Soal Latihan](#soal-latihan)
       - [Latihan 1](#latihan-1)
       - [Latihan 2](#latihan-2)
@@ -630,7 +630,7 @@ Program 1 : 30
 ```
 
 ## Appendix
-### Libraries documentation (and functions) :sparkles: :sparkles: :camel:
+### Libraries documentation (and functions)
 ```
 $ man {anything-you-want-to-know}
 $ man mkfio
