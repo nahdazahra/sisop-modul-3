@@ -50,10 +50,10 @@ int pthread_create(pthread_t *restrict tidp,
 /* Jika berhasil mengembalikan nilai 0, jika error mengembalikan nilai 1 */
 ```
 Penjelasan Syntax:
-- The memory location pointed to by `tidp` is set to the thread ID of the newly created thread when pthread_create returns successfully.
-- The attr argument is used to customize various thread attributes (detailed in Section 12.3). This chapter sets this to NULL to create a thread with the default attributes.
-- The newly created thread starts running at the address of the start_rtn function.
-- The arg is a pointer to the single argument passed to the start_rtn. If you need to pass more than one argument to the start_rtn function, then you need to store them in a structure and pass the address of the structure in arg.
+- Pointer `tidp` digunakan untuk menunjukkan alamat memori dengan thread ID dari thread baru.
+- Argumen `attr` digunakan untuk menyesuaikan atribut yang digunakan oleh thread. nilai `attr` di-set `NULL` ketika thread menggunakan atribut *default*.
+- Thread yang baru dibuat akan berjalan dimulai dari fungsi `start_rtn` dalam library thread.
+- Pointer `arg` digunakan untuk memberikan sebuah argumen ke fungsi `start_rtn`, jika tidak diperlukan argumen, maka `arg` akan di-set `NULL`.
 
 Contoh membuat program tanpa menggunakan thread [playtanpathread.c](playtanpathread.c):
 
@@ -203,13 +203,14 @@ Pada program pertama tidak menjalankan fungsi `print_message_function` karena se
   #include <pthread.h>
   void pthread_exit(void *rval_ptr);
   ```
-  Argumen `rval_ptr` adalah pointer yang digunakan 
+  Argumen `rval_ptr` adalah pointer yang digunakan yang dapat diakses oleh fungsi `pthread_join()` agar dapat mengetahui status thread tersebut
+
 - Fungsi untuk melakukan join thread 
   ```c
   int pthread_join(pthread_t thread, void **rval_ptr);
   /* Jika berhasil mengembalikan nilai 0, jika error mengembalikan nilai 1 */
   ```
-
+  Fungsi akan menunda pekerjaan sampai status pointer `rval_ptr` dari fungsi `pthread_exit()` mengembalikan nilainya.
 
 ### 1.3 Mutual Exclusion
 Disebut juga sebagai **Mutex**, yaitu suatu cara yang menjamin jika ada pekerjaan yang menggunakan variabel atau berkas digunakan juga oleh pekerjaan yang lain, maka pekerjaan lain tersebut akan mengeluarkan nilai dari pekerjaan sebelumnya.
@@ -263,11 +264,12 @@ int main(void)
 
 ```
 Keterangan :
-- Variabel status adalah contoh simple untuk mengendalikan jalannya thread.
-- Variabel yang digunakan untuk menyimpan nilai yang diinputkan sama, padahal masing-masing thread menjalankan fungsi yang berbeda // berjalan pada thread yang berbeda.
+- Terdapat 2 buah thread yang berjalan dengan fungsi yang berbeda.
+- Sumber daya (variabel) yang digunakan kedua thread untuk mengeksekusi pekerjaannya **sama**.
+- Variabel `status` adalah contoh simple untuk mengendalikan jalannya thread.
 
 **Kesimpulan** :
-Karena kita tidak mengetahui *thread* mana yang lebih dahulu mengeksekusi sebuah variable atau sumber daya pada program, kegunaan dari Mutex adalah untuk menjaga sumber daya suatu thread tidak digunakan oleh thread lain sebelum ia menyelesaikan pekerjaannya.
+Karena kita tidak mengetahui *thread* mana yang lebih dahulu mengeksekusi sebuah variable atau sumber daya pada program, kegunaan dari **Mutex** adalah untuk menjaga sumber daya suatu thread agar tidak digunakan oleh thread lain sebelum ia menyelesaikan pekerjaannya.
 
 
 ## 2. IPC (Interprocess Communication)
