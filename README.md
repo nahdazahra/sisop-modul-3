@@ -19,17 +19,19 @@
     - [2.5 Semaphores](#25-semaphores)
     - [2.6 Shared Memory](#26-shared-memory)
   - [Appendix](#appendix)
-    - [Libraries documentation (and functions) :sparkles: :sparkles: :camel:](#libraries-documentation-and-functions-sparkles-sparkles-camel)
+    - [Libraries documentation (and functions)](#libraries-documentation-and-functions)
   - [Soal Latihan](#soal-latihan)
       - [Latihan 1](#latihan-1)
       - [Latihan 2](#latihan-2)
       - [Latihan 3](#latihan-3)
     - [References](#references)
+
+
 ## 1. Thread 
 ### 1.1 Thread
 Thread merupakan unit terkecil dalam suatu proses yang dapat dijadwalkan oleh sistem operasi. Thread biasanya terbentuk oleh `fork` yang berjalan pada suatu script atau program untuk sebuah proses. Minimal terdapat sebuah thread yang berjalan dalam suatu proses, walau biasanya terdapat lebih dari satu thread dalam proses tersebut. Thread akan berbagi memori dan menggunakan informasi (nilai) dari variabel-variabel pada suatu proses tersebut. Penggambaran thread pada sebuah proses dapat dilihat sebagai berikut.
 
-![thread](thread2.png)
+![thread](img/thread2.png)
 
 Untuk melihat thread yang sedang berjalan, gunakan perintah :
 ```bash
@@ -48,10 +50,10 @@ int pthread_create(pthread_t *restrict tidp,
 /* Jika berhasil mengembalikan nilai 0, jika error mengembalikan nilai 1 */
 ```
 Penjelasan Syntax:
-- The memory location pointed to by `tidp` is set to the thread ID of the newly created thread when pthread_create returns successfully.
-- The attr argument is used to customize various thread attributes (detailed in Section 12.3). This chapter sets this to NULL to create a thread with the default attributes.
-- The newly created thread starts running at the address of the start_rtn function.
-- The arg is a pointer to the single argument passed to the start_rtn. If you need to pass more than one argument to the start_rtn function, then you need to store them in a structure and pass the address of the structure in arg.
+- Pointer `tidp` digunakan untuk menunjukkan alamat memori dengan thread ID dari thread baru.
+- Argumen `attr` digunakan untuk menyesuaikan atribut yang digunakan oleh thread. nilai `attr` di-set `NULL` ketika thread menggunakan atribut *default*.
+- Thread yang baru dibuat akan berjalan dimulai dari fungsi `start_rtn` dalam fungsi thread.
+- Pointer `arg` digunakan untuk memberikan sebuah argumen ke fungsi `start_rtn`, jika tidak diperlukan argumen, maka `arg` akan di-set `NULL`.
 
 Contoh membuat program tanpa menggunakan thread [playtanpathread.c](playtanpathread.c):
 
@@ -85,7 +87,7 @@ Contoh membuat program menggunakan thread [playthread.c](playthread.c) :
 #include<stdlib.h>
 #include<unistd.h>
 
-pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasusu ini ada 2 thread
+pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
 
 int length=5; //inisialisasi jumlah untuk looping
 void* playandcount(void *arg)
@@ -116,7 +118,7 @@ int main(void)
 {
 	int i=0;
 	int err;
-	while(i<2) //looping membuat thread 2x
+	while(i<2) // loop sejumlah thread
 	{
 		err=pthread_create(&(tid[i]),NULL,&playandcount,NULL); //membuat thread
 		if(err!=0) //cek error
@@ -138,69 +140,82 @@ int main(void)
 ```
 
 **Kesimpulan** :
-
-Terlihat ketika program menggunakan thread dapat menjalankan dua task secara bersamaan (task menampilkan gam dan task untuk timer lagu).
+Terlihat ketika program menggunakan thread dapat menjalankan dua task secara bersamaan (task menampilkan gambar dan task timer).
 
 ### 1.2 Join Thread
-Fungsi untuk melakukan penggabungan dengan thread lain yang telah di-terminasi (telah di exit).Bila thread yang ingin di-join belum diterminasi,Maka fungsi ini akan menunggu hingga thread yang diinginkan telah terminated.
+Join thread adalah fungsi untuk melakukan penggabungan dengan thread lain yang telah berhenti (*terminated*). Bila thread yang ingin di-join belum dihentikan, maka fungsi ini akan menunggu hingga thread yang diinginkan berstatus **`Terminated`**. Fungsi `pthread_join()` ini dapat dikatakan sebagai fungsi `wait()` pada proses, karena program (*task*) utama akan menunggu thread yang di-join-kan pada program utama tersebut. Kita tidak mengetahui program utama atau thread yang lebih dahulu menyelesaikan pekerjaannya.
 
 Contoh program C Join_Thread [thread_join.c](thread_join.c):
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h> //library thread
+#include<stdio.h>
+#include<stdlib.h>
+#include<pthread.h> //library thread
 
 void *print_message_function( void *ptr );
 
 int main()
 {
-     pthread_t thread1, thread2;//inisialisasi awal
-     const char *message1 = "Thread 1";
-     const char *message2 = "Thread 2";
-     int  iret1, iret2;
+    pthread_t thread1, thread2; //inisialisasi thread
+    const char *message1 = "Thread 1";
+    const char *message2 = "Thread 2";
+    int  iret1, iret2;
 
-     iret1 = pthread_create( &thread1, NULL, print_message_function, (void*) message1);//membuat thread pertama
-     if(iret1)//jika eror
-     {
-         fprintf(stderr,"Error - pthread_create() return code: %d\n",iret1);
-         exit(EXIT_FAILURE);
-     }
+    iret1 = pthread_create(&thread1, NULL, print_message_function, (void*) message1); //membuat thread pertama
+    if(iret1) //jika gagal
+    {
+        fprintf(stderr,"Error - pthread_create() return code: %d\n",iret1);
+        exit(EXIT_FAILURE);
+    }
 
-     iret2 = pthread_create( &thread2, NULL, print_message_function, (void*) message2);//membuat thread kedua
-     if(iret2)//jika gagal
-     {
-         fprintf(stderr,"Error - pthread_create() return code: %d\n",iret2);
-         exit(EXIT_FAILURE);
-     }
+    iret2 = pthread_create(&thread2, NULL, print_message_function, (void*) message2); //membuat thread kedua
+    if(iret2) //jika gagal
+    {
+        fprintf(stderr,"Error - pthread_create() return code: %d\n",iret2);
+        exit(EXIT_FAILURE);
+    }
 
-     printf("pthread_create() for thread 1 returns: %d\n",iret1);
-     printf("pthread_create() for thread 2 returns: %d\n",iret2);
+    printf("pthread_create() for thread 1 returns: %d\n",iret1);
+    printf("pthread_create() for thread 2 returns: %d\n",iret2);
 
-     //pthread_join( thread1, NULL);
-     //pthread_join( thread2, NULL); 
+    //pthread_join(thread1, NULL);
+    //pthread_join(thread2, NULL); 
 
-     exit(EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }
 
 void *print_message_function( void *ptr )
 {
-     char *message;
-     message = (char *) ptr;
-     printf("%s \n", message);
+    char *message;
+    message = (char *) ptr;
+    printf("%s \n", message);
 }
 ```
-Keterangan :
-- Pada program di atas kita mengcomment baris pthread_join hasilnya tidak akan memunculkan tulisan Thread 1 dan Thread 2 padahal diinisialisasi thread program akan menjalankan fungsi print_message. 
-- Sekarang kita mencoba menghapus comment pada Pthread_join. Hasilnya program akan mengeluarkan output Thread 1 dan Thread 2. 
 
-Kesimpulan :
-Pada program pertama tidak menjalankan fungsi print_message karena sebelum kedua Thread dijadwalkan, parent_thread telah selesai dieksekusi sehingga tidak menjalankan fungsi bawaan. Pada program kedua pthread_join digunakan untuk menunda eksekusi calling thread hingga target thread selesai dieksekusi, dengan fungsi ini parent_thread akan disuspend hingga target thread selesai dieksekusi.
+Keterangan :
+- Pada program di atas, jika kita *comment* baris `pthread_join`, maka hasil yang didapat tidak akan memunculkan tulisan **Thread 1** dan **Thread 2**.
+- Jika pemanggilan fungsi `pthread_join` di-uncomment, maka program yang kita buat akan memunculkan tulisan **Thread 1** dan **Thread 2**.
+
+**Kesimpulan** :
+Pada program pertama tidak menjalankan fungsi `print_message_function` karena sebelum kedua thread dijadwalkan, program utama (kemungkinan) telah selesai dieksekusi sehingga tidak menjalankan fungsi bawaan pada thread. Pada percobaan kedua, fungsi `pthread_join()` digunakan untuk membuat program utama menunggu thread yang *join* hingga target thread selesai dieksekusi, dengan fungsi ini program utama di-suspend hingga target thread selesai dieksekusi.
+- Fungsi untuk terminasi thread
+  ```c
+  #include <pthread.h>
+  void pthread_exit(void *rval_ptr);
+  ```
+  Argumen `rval_ptr` adalah pointer yang digunakan yang dapat diakses oleh fungsi `pthread_join()` agar dapat mengetahui status thread tersebut
+
+- Fungsi untuk melakukan join thread 
+  ```c
+  int pthread_join(pthread_t thread, void **rval_ptr);
+  /* Jika berhasil mengembalikan nilai 0, jika error mengembalikan nilai 1 */
+  ```
+  Fungsi akan menunda pekerjaan sampai status pointer `rval_ptr` dari fungsi `pthread_exit()` mengembalikan nilainya.
 
 ### 1.3 Mutual Exclusion
-Suatu cara yang menjamin jika ada sebuah proses yang menggunakan variabel atau berkas yang sama (digunakan juga oleh proses lain), maka proses lain akan dikeluarkan dari pekerjaan yang sama.
+Disebut juga sebagai **Mutex**, yaitu suatu cara yang menjamin jika ada pekerjaan yang menggunakan variabel atau berkas digunakan juga oleh pekerjaan yang lain, maka pekerjaan lain tersebut akan mengeluarkan nilai dari pekerjaan sebelumnya.
 
-Contoh program Simple Mutual_Exclusion [threadmutex.c](https://github.com/desyrahmi/sisop-modul-3/blob/master/threadmutex.c):
+Contoh program Simple Mutual_Exclusion [threadmutex.c](threadmutex.c):
 ```c
 #include<stdio.h>
 #include<string.h>
@@ -208,8 +223,7 @@ Contoh program Simple Mutual_Exclusion [threadmutex.c](https://github.com/desyra
 #include<stdlib.h>
 #include<unistd.h>
  
-pthread_t tid1;
-pthread_t tid2;
+pthread_t tid1, tid2;
 int status;
 int nomor;
  
@@ -217,14 +231,13 @@ void* tulis(void *arg)
 {
     status = 0;
  
-    printf("Masukan nomor ");
+    printf("Masukan nomor : ");
     scanf("%d", &nomor);
  
     status = 1;
  
     return NULL;
 }
-
 
 void* baca(void *arg)
 {
@@ -239,8 +252,8 @@ void* baca(void *arg)
 int main(void)
 {
 
-    pthread_create(&(tid1), NULL, &tulis, NULL);
-    pthread_create(&(tid2), NULL, &baca, NULL);
+    pthread_create(&(tid1), NULL, tulis, NULL);
+    pthread_create(&(tid2), NULL, baca, NULL);
  
     pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
@@ -249,11 +262,14 @@ int main(void)
 }
 
 ```
-Keterangan :
-- Variabel status adalah contoh simple untuk mengendalikan jalannya thread. 
 
-Kesimpulan :
-Kegunaan dari Mutex adalah untuk menjaga sumber daya suatu thread tidak digunakan oleh thread lain.
+Keterangan :
+- Terdapat 2 buah thread yang berjalan dengan fungsi yang berbeda.
+- Sumber daya (variabel) yang digunakan kedua thread untuk mengeksekusi pekerjaannya **sama**.
+- Variabel `status` adalah contoh simple untuk mengendalikan jalannya thread.
+
+**Kesimpulan** :
+Karena kita tidak mengetahui *thread* mana yang lebih dahulu mengeksekusi sebuah variable atau sumber daya pada program, kegunaan dari **Mutex** adalah untuk menjaga sumber daya suatu thread agar tidak digunakan oleh thread lain sebelum ia menyelesaikan pekerjaannya.
 
 
 ## 2. IPC (Interprocess Communication)
@@ -316,7 +332,7 @@ int main()
 	for (i = 0; i < 3; i++) { 
 		/* read pipe */
 		read(p[0], inbuf, MSGSIZE); 
-		printf("% s\n", inbuf); 
+		printf("%s\n", inbuf); 
 	} 
 	return 0; 
 } 
@@ -435,7 +451,7 @@ int main()
 ### 2.3 Sockets
 *Socket* merupakan sebuah *end-point* dalam sebuah proses yang saling berkomunikasi. Biasanya *socket* digunakan untuk komunikasi antar proses pada komputer yang berbeda, namun dapat juga digunakan dalam komputer yang sama.
 
-Example : [socket-server.c](https://github.com/desyrahmi/sisop-modul-3/blob/master/socket-server.c) [socket-client.c](https://github.com/desyrahmi/sisop-modul-3/blob/master/socket-client.c)
+Example : [socket-server.c](socket-server.c) [socket-client.c](socket-client.c)
 
 Server
 ```c
@@ -547,7 +563,7 @@ Semaphore berbeda dengan jenis-jenis IPC yang lain. Pada pengaplikasiannya, sema
 ### 2.6 Shared Memory
 Sebuah mekanisme *mapping area(segments)* dari suatu blok *memory* untuk digunakan bersama oleh beberapa proses. Sebuah proses akan menciptakan *segment memory*, kemudian proses lain yang diijinkan dapat mengakses *memory* tersebut. *Shared memory* merupakan cara yang efektif untuk melakukan pertukaran data antar program.
 
-Example: [Proses 1](https://github.com/desyrahmi/sisop-modul-3/blob/master/proses1.c) [Proses 2](https://github.com/desyrahmi/sisop-modul-3/blob/master/proses2.c)
+Example: [Proses 1](proses1.c) [Proses 2](proses2.c)
 
 Proses 1
 ```c
@@ -614,12 +630,11 @@ Program 1 : 30
 ```
 
 ## Appendix
-### Libraries documentation (and functions) :sparkles: :sparkles: :camel:
+### Libraries documentation (and functions)
 ```
 $ man {anything-you-want-to-know}
-$ man mkfio
-$ man fcntl.h
-$ man unistd.h
+$ man mkfifo
+$ man fcntl
 ```
 
 ## Soal Latihan 
@@ -633,20 +648,12 @@ Buatlah sebuah program multithreading yang dapat menampilkan bilangan prima dari
 misalkan N = 100 dan T=2; jadi thread 1 akan mencari bilangan prima dari 1-50 dan thread 2 akan mencari dari 51-100
 
 #### Latihan 3
-Ohan adalah seorang network administrator, dia bekerja menggunakan linux server. Suatu ketika Ohan
-merasa jenuh dengan pekerjaannya dia ingin mendengarkan lagu, tetapi linux server tidak memiliki GUI
-sehingga Ohan harus memutar musik menggunakan konsol/terminal. Bantulah Ohan membuat pemutar
-musik berbasis konsol.
-Pemutar musik memiliki spesifikasi sebagai berikut :
-1. Perintah help untuk menampilkan daftar perintah yang dapat digunakan.
-2. Memiliki fitur list untuk menampilkan semua lagu pada folder playlist
-3. Memiliki fitur play untuk menjalankan lagu
-4. Memiliki fitur pause setelah t detik
-5. Memiliki fitur continue setelah t detik
-6. Memiliki fitur stop setelah t detik
+<!-- diganti soal pipe -->
 
 ### References 
 https://notes.shichao.io/apue/
+
 https://www.gta.ufrj.br/ensino/eel878/sockets/index.html
+
 http://advancedlinuxprogramming.com/alp-folder/alp-ch05-ipc.pdf
 
