@@ -104,7 +104,7 @@ void* playandcount(void *arg)
 			fflush(stdout);
 			sleep(1);
 			system("clear");
-		}
+		}fff<s
 		system("pkill xlogo");
 	}
 	else if(pthread_equal(id,tid[1]))

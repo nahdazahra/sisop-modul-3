@@ -3,30 +3,40 @@
 #include<pthread.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
 
 pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
 
 int length=5; //inisialisasi jumlah untuk looping
 void* playandcount(void *arg)
 {
+	char *argv1[] = {"clear", NULL};
+	char *argv2[] = {"xlogo", NULL};
 	unsigned long i=0;
 	pthread_t id=pthread_self();
 	int iter;
 	if(pthread_equal(id,tid[0])) //thread untuk menjalankan counter
 	{
-		system("clear");
-		for(iter=length;iter>0;iter--)
+		for(iter=0;iter<6;iter++)
 		{
-			printf("%i",iter);
-			fflush(stdout);
-			sleep(1);
-			system("clear");
+			child=fork();
+			if(child==0) {
+				printf("%d",iter);
+				fflush(stdout);
+				sleep(1);
+				execv("/usr/bin/clear", argv1);
+			}
+
+			else
+			{
+				while ((wait(&stat)) > 0);
+			}
 		}
-		system("pkill xlogo");
 	}
-	else if(pthread_equal(id,tid[1]))
+	else if(pthread_equal(id,tid[1])) // thread menampilkan gambar
 	{
-        system("xlogo");
+		execv("/usr/bin/xlogo", argv2);
 	}
 	return NULL;
 }
