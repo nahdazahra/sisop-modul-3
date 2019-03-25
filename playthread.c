@@ -6,7 +6,7 @@
 #include<sys/types.h>
 #include<sys/wait.h>
 
-pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
+pthread_t tid[3]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
 
 int length=5; //inisialisasi jumlah untuk looping
 void* playandcount(void *arg)
@@ -20,24 +20,20 @@ void* playandcount(void *arg)
 	{
 		for(iter=0;iter<6;iter++)
 		{
-			child=fork();
-			if(child==0) {
-				printf("%d",iter);
-				fflush(stdout);
-				sleep(1);
-				execv("/usr/bin/clear", argv1);
-			}
-
-			else
-			{
-				while ((wait(&stat)) > 0);
-			}
+			printf("%d\n",iter);
+			fflush(stdout);
+			sleep(1);
 		}
 	}
 	else if(pthread_equal(id,tid[1])) // thread menampilkan gambar
 	{
 		execv("/usr/bin/xlogo", argv2);
 	}
+	else if(pthread_equal(id,tid[2])) // thread menutup gambar
+	{
+		execv("/usr/bin/pkill", argv2);
+	}
+
 	return NULL;
 }
 

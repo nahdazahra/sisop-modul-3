@@ -18,19 +18,9 @@ int main()
 	{
 		for(i=0;i<6;i++)
 		{
-			child=fork();
-			if(child==0) {
-				printf("%d",i);
-				fflush(stdout);
-				sleep(1);
-				execv("/usr/bin/clear", argv1);
-			}
-
-			else
-			{
-				while ((wait(&stat)) > 0);
-			}
-
+			printf("%d\n",i);
+			fflush(stdout);
+			sleep(1);
 		}
 		execv("/usr/bin/xlogo", argv2);
 	}

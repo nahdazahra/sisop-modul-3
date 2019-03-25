@@ -59,20 +59,32 @@ Contoh membuat program tanpa menggunakan thread [playtanpathread.c](playtanpathr
 
 ```c
 #include<stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+
 int main()
 {
-	int i,length=5;
-	system("clear");
-	for(i=length;i>0;i--)
-	{
-		printf("%d",i);
-		fflush(stdout);
-		sleep(1);
-		system("clear");
+	pid_t child;
+	int i, stat;
+	char *argv1[] = {"clear", NULL};
+	char *argv2[] = {"xlogo", NULL};
+	child = fork();
+	if (child==0) {
+		execv("/usr/bin/clear", argv1);
 	}
-	system("xlogo");
+	else
+	{
+		for(i=0;i<6;i++)
+		{
+			printf("%d\n",i);
+			fflush(stdout);
+			sleep(1);
+		}
+		execv("/usr/bin/xlogo", argv2);
+	}
+	
 }
 
 ```
@@ -86,31 +98,37 @@ Contoh membuat program menggunakan thread [playthread.c](playthread.c) :
 #include<pthread.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
 
-pthread_t tid[2]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
+pthread_t tid[3]; //inisialisasi array untuk menampung thread dalam kasus ini ada 2 thread
 
 int length=5; //inisialisasi jumlah untuk looping
 void* playandcount(void *arg)
 {
+	char *argv1[] = {"clear", NULL};
+	char *argv2[] = {"xlogo", NULL};
 	unsigned long i=0;
 	pthread_t id=pthread_self();
 	int iter;
 	if(pthread_equal(id,tid[0])) //thread untuk menjalankan counter
 	{
-		system("clear");
-		for(iter=length;iter>0;iter--)
+		for(iter=0;iter<6;iter++)
 		{
-			printf("%i",iter);
+			printf("%d\n",iter);
 			fflush(stdout);
 			sleep(1);
-			system("clear");
-		}fff<s
-		system("pkill xlogo");
+		}
 	}
-	else if(pthread_equal(id,tid[1]))
+	else if(pthread_equal(id,tid[1])) // thread menampilkan gambar
 	{
-        system("xlogo");
+		execv("/usr/bin/xlogo", argv2);
 	}
+	else if(pthread_equal(id,tid[2])) // thread menutup gambar
+	{
+		execv("/usr/bin/pkill", argv2);
+	}
+
 	return NULL;
 }
 
@@ -137,6 +155,7 @@ int main(void)
 	return 0;
 }
 
+
 ```
 
 **Kesimpulan** :
@@ -148,28 +167,28 @@ Join thread adalah fungsi untuk melakukan penggabungan dengan thread lain yang t
 Contoh program C Join_Thread [thread_join.c](thread_join.c):
 
 ```c
-#include<stdio.h>
-#include<stdlib.h>
-#include<pthread.h> //library thread
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h> //library thread
 
 void *print_message_function( void *ptr );
 
 int main()
 {
-    pthread_t thread1, thread2; //inisialisasi thread
+    pthread_t thread1, thread2;//inisialisasi awal
     const char *message1 = "Thread 1";
     const char *message2 = "Thread 2";
     int  iret1, iret2;
 
-    iret1 = pthread_create(&thread1, NULL, print_message_function, (void*) message1); //membuat thread pertama
-    if(iret1) //jika gagal
+    iret1 = pthread_create( &thread1, NULL, print_message_function, (void*) message1); //membuat thread pertama
+    if(iret1) //jika eror
     {
         fprintf(stderr,"Error - pthread_create() return code: %d\n",iret1);
         exit(EXIT_FAILURE);
     }
 
-    iret2 = pthread_create(&thread2, NULL, print_message_function, (void*) message2); //membuat thread kedua
-    if(iret2) //jika gagal
+    iret2 = pthread_create( &thread2, NULL, print_message_function, (void*) message2);//membuat thread kedua
+    if(iret2)//jika gagal
     {
         fprintf(stderr,"Error - pthread_create() return code: %d\n",iret2);
         exit(EXIT_FAILURE);
@@ -178,8 +197,8 @@ int main()
     printf("pthread_create() for thread 1 returns: %d\n",iret1);
     printf("pthread_create() for thread 2 returns: %d\n",iret2);
 
-    //pthread_join(thread1, NULL);
-    //pthread_join(thread2, NULL); 
+    // pthread_join( thread1, NULL);
+    // pthread_join( thread2, NULL); 
 
     exit(EXIT_SUCCESS);
 }
@@ -189,7 +208,12 @@ void *print_message_function( void *ptr )
     char *message;
     message = (char *) ptr;
     printf("%s \n", message);
+
+    for(int i=0;i<10;i++){
+        printf("%s %d \n", message, i);
+    }
 }
+
 ```
 
 Keterangan :

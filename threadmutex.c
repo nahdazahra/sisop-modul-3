@@ -37,7 +37,6 @@ int main(void)
     pthread_create(&(tid1), NULL, tulis, NULL);
     pthread_create(&(tid2), NULL, baca, NULL);
  
-    pthread_join(tid1, NULL);
     pthread_join(tid2, NULL);
  
     return 0;

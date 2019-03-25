@@ -39,5 +39,9 @@ void *print_message_function( void *ptr )
     char *message;
     message = (char *) ptr;
     printf("%s \n", message);
+
+    for(int i=0;i<10;i++){
+        printf("%s %d \n", message, i);
+    }
 }
 
