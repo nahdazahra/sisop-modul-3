@@ -475,6 +475,9 @@ int main()
 ### 2.3 Sockets
 *Socket* merupakan sebuah *end-point* dalam sebuah proses yang saling berkomunikasi. Biasanya *socket* digunakan untuk komunikasi antar proses pada komputer yang berbeda, namun dapat juga digunakan dalam komputer yang sama.
 
+Diagram :   
+![alt](img/socket.png "implementasi socket C")
+
 Example : [socket-server.c](socket-server.c) [socket-client.c](socket-client.c)
 
 Server
@@ -539,6 +542,7 @@ Client
 #include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 #define PORT 8080
   
 int main(int argc, char const *argv[]) {
@@ -671,13 +675,16 @@ Buatlah sebuah program multithreading yang dapat menampilkan bilangan prima dari
 
 misalkan N = 100 dan T=2; jadi thread 1 akan mencari bilangan prima dari 1-50 dan thread 2 akan mencari dari 51-100
 
-#### Latihan 3
+#### Latihan 3  
+Buatlah sebuah program untuk menampilkan file diurutan ketiga dari sebuah direktori. Dengan ketentuan :  
+- menggunakan pipe.
+- menggunakan command ls, head, tail.
 <!-- diganti soal pipe -->
 
 ### References 
-https://notes.shichao.io/apue/
-
-https://www.gta.ufrj.br/ensino/eel878/sockets/index.html
-
-http://advancedlinuxprogramming.com/alp-folder/alp-ch05-ipc.pdf
+https://notes.shichao.io/apue/  
+https://www.gta.ufrj.br/ensino/eel878/sockets/index.html  
+http://advancedlinuxprogramming.com/alp-folder/alp-ch05-ipc.pdf  
+https://www.geeksforgeeks.org/socket-programming-cc/  
+https://www.geeksforgeeks.org/pipe-system-call/  
 
